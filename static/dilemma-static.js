@@ -13,7 +13,7 @@ module.exports = function() {
 	app.get("/scoreboard", pages.scoreboard);
 
 	app.listen(process.env.PORT, process.env.IP, function() {
-		//console.log("Listening on " + process.env.PORT);
+		console.log(process.env.PORT);
 	})
 
 };

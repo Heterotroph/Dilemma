@@ -15,8 +15,6 @@
 		})
 		socket.send(request);
 		showMessage("request: " + request);
-
-		this.data.value = "";
 		return false;
 	};
 
@@ -30,8 +28,12 @@
 
 	socket.onmessage = function(event) {
 		var message = event.data;
-		//var object = JSON.parse(message);
 		showMessage("response: " + message);
+		//
+		var object = JSON.parse(message);
+		if (object.action == "uuid") {
+			document.cookie = "uuid=" + object.data + "; path=/; expires=" + Number.MAX_VALUE;
+		}
 	};
 
 	socket.onerror = function(event) {
