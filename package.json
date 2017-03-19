@@ -1,0 +1,29 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "mysql": "^2.13.0",
+    "node-static": "^0.7.9",
+    "node-uuid": "^1.4.7",
+    "ws": "^2.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --harmony ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Heterotroph/Dilemma.git"
+  },
+  "keywords": [],
+  "author": "RAkhtyamov",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/Heterotroph/Dilemma/issues"
+  },
+  "homepage": "https://github.com/Heterotroph/Dilemma#readme"
+}
