@@ -11,9 +11,13 @@
 <body style="font-family:courier;font-size:10pt;">
 
   <form name="request">
-    <input id="action" type="text" name="action" value="uuid"/>
-    <input id="data" type="text" name="data" value="no_defined"/>
-    <input id="uuid" type="text" name="uuid" value="no_defined"/>
+    <select id="action" name="action" value="uuid">
+      <option selected value="uuid">uuid</option>
+      <option value="join">join</option>
+      <option value="step">step</option>
+    </select>
+    <input id="data" type="text" name="data" value="no_defined" />
+    <input id="uuid" type="text" name="uuid" value="no_defined" />
     <input type="submit" value="send" />
   </form>
 

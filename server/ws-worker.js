@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const WebSocketServer = new require("ws");
 
-module.exports = class WSWorker extends EventEmitter {
+class WSWorker extends EventEmitter {
 	
 	/**
 	 *
@@ -10,7 +10,7 @@ module.exports = class WSWorker extends EventEmitter {
 	createServer() {
 		console.log("WSWorker#createServer");
 
-		this.allowablEvents = ["uuid", "join", "play", "empty"];
+		this.allowablEvents = ["uuid", "user", "join", "step", "empty"];
 		this.server = new WebSocketServer.Server({
 			ip: process.env.WS_IP,
 			port: process.env.WS_PORT
@@ -33,7 +33,7 @@ module.exports = class WSWorker extends EventEmitter {
 			var timeout = setTimeout(function() {
 				ws.close(1003)
 			}, 10000);
-			var clientID = "no_defined";
+			var clientID = require("node-uuid").v1(); //can be replaced uuid request
 
 			ws.on("message", function(message) {
 				console.log("WSWorker#message#" + clientID + ": " + message);
@@ -50,10 +50,9 @@ module.exports = class WSWorker extends EventEmitter {
 			})
 
 			that.on("uuid", function(data, ws) {
-				console.log("WSWorker#uuid#" + clientID);
+				console.log("WSWorker#uuid");
 				clearTimeout(timeout);
-				if (data.uuid == clientID) {
-					clientID = require("node-uuid").v1();
+				if (data.uuid == "no_defined" || data.uuid == "undefined" || !data.uuid) {
 					var response = JSON.stringify({
 						"action": "uuid",
 						"data": clientID,
@@ -61,6 +60,9 @@ module.exports = class WSWorker extends EventEmitter {
 					})
 					ws.send(response);
 					console.log("WSWorker#uuid#send: " + response);
+				} else {
+					clientID = data.uuid;
+					that.emit("user", data, ws); //user is ready
 				}
 			});
 			
@@ -76,6 +78,7 @@ module.exports = class WSWorker extends EventEmitter {
 	 *	}
 	 */
 	processMessage(message, ws) {
+		console.log("processMessage\n");
 		var data = JSON.parse(message);
 		if (this.allowablEvents.indexOf(data.action) == -1) {
 			this.emit("empty", data, ws);
@@ -85,4 +88,6 @@ module.exports = class WSWorker extends EventEmitter {
 		return data.action;
 	}
 
-};
+}
+
+module.exports = WSWorker;

@@ -16,7 +16,6 @@
 		socket.send(request);
 		showMessage("request: " + request);
 
-		this.action.value = "";
 		this.data.value = "";
 		return false;
 	};
@@ -44,12 +43,5 @@
 		var item = document.createElement("div");
 		item.appendChild(document.createTextNode(message));
 		logDiv.insertBefore(item, logDiv.firstChild);
-	}
-
-	function getCookie(name) {
-		var matches = document.cookie.match(new RegExp(
-			"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"
-		));
-		return matches ? decodeURIComponent(matches[1]) : undefined;
 	}
 })();

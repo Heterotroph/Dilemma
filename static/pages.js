@@ -12,7 +12,7 @@ module.exports.game = function(request, response) {
   fs.createReadStream(process.env.PUBLIC_PATH + "game.html").pipe(response);
 }
 
-module.exports.game = function(request, response) {
+module.exports.scoreboard = function(request, response) {
 	response.writeHead(200, {"Content-Type": "text/html; charset=utf8"});
-  fs.createReadStream(process.env.PUBLIC_PATH + "game.html").pipe(response);
+  fs.createReadStream(process.env.PUBLIC_PATH + "scoreboard.html").pipe(response);
 }
