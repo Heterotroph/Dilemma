@@ -4,6 +4,11 @@
 		return;
 	}
 	
+	var uuid = Cookies.get('uuid');
+	if (uuid) {
+		document.getElementById("uuid").value = uuid;
+	}
+	
 	var socket = new WebSocket("ws://dilemma-heterotroph.codeanyapp.com:3000");
 	
 	document.forms.request.onsubmit = function() {
@@ -14,33 +19,35 @@
 			"timestamp": new Date().getTime()
 		})
 		socket.send(request);
-		showMessage("request: " + request);
+		log("request: " + request);
 		return false;
 	};
 
 	socket.onopen = function(event) {
-		showMessage("open;");
+		log("open; ");
 	};
 
 	socket.onclose = function(event) {
-		showMessage("close;");
+		log("close; ");
 	};
 
 	socket.onmessage = function(event) {
 		var message = event.data;
-		showMessage("response: " + message);
+		log("response: " + message);
 		//
 		var object = JSON.parse(message);
 		if (object.action == "uuid") {
-			document.cookie = "uuid=" + object.data + "; path=/; expires=" + Number.MAX_VALUE;
+			Cookies.set("uuid", object.data);
+			//document.cookie = "uuid=" + object.data + "; path=/; expires=" + Number.MAX_VALUE;
+			document.getElementById("uuid").value = object.data;
 		}
 	};
 
 	socket.onerror = function(event) {
-		showMessage("error");
+		log("error; ");
 	};
 
-	function showMessage(message) {
+	function log(message) {
 		var logDiv = document.getElementById("log");
 		var item = document.createElement("div");
 		item.appendChild(document.createTextNode(message));

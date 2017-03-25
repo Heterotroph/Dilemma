@@ -6,9 +6,10 @@
   <title>
     home
   </title>
+  <script src="./lib/js.cookie.js"></script>
 </head>
 
-<body style="font-family:courier;font-size:10pt;">
+<body style="font-family:courier;font-size:10pt">
 
   <form name="request">
     <select id="action" name="action" value="uuid">
@@ -16,8 +17,8 @@
       <option value="step">step</option>
       <option value="other">other</option>
     </select>
-    <input id="data" type="text" name="data" value="" />
-    <input id="uuid" type="text" name="uuid" value="" />
+    <input id="data" type="text" name="data" value="" style="width:500px;"/>
+    <input id="uuid" type="text" name="uuid" value="" style="width:300px;text-align:center;"/>
     <input type="submit" value="send" />
   </form>
 

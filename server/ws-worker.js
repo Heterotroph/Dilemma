@@ -1,6 +1,8 @@
-const EventEmitter = require('events');
+const EventEmitter = require("events");
 const WebSocketServer = new require("ws");
-const Cookie = require('cookie');
+const Cookie = require("cookie");
+const Response = require("./response");
+const NodeUUID = require("node-uuid");
 
 /**
  *	JSON example
@@ -52,12 +54,8 @@ class WSWorker extends EventEmitter {
 					uuid = Cookie.parse(cookie).uuid;
 				} catch (error) {}
 				if (!uuid || uuid == "undefined") {
-					uuid = require("node-uuid").v1();
-					var response = JSON.stringify({
-						"action": "uuid",
-						"data": uuid,
-						"timestamp": new Date().getTime()
-					})
+					uuid = NodeUUID.v1();
+					var response = JSON.stringify(Response.uuid(uuid));
 					ws.send(response);
 					console.log("send: " + response);
 				}

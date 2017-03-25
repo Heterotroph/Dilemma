@@ -3,7 +3,6 @@ User.map = {}
 function User(uuid, ws) {
   this.uuid = uuid;
   this.ws = ws;
-  this.rooms = [];
 }
 
 User.create = function(uuid, ws) {
