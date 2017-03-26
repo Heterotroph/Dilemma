@@ -8,16 +8,18 @@ Room.prepared = {
 Room.map = {
   count: 0
 };
-Room.size = {
-  "SMALL": 3,
-  "STANDART": 5,
-  "BIG": 7
+Room.types = {
+  "SMALL": {
+    "players": 3,
+    "resuorces": 300
+  }
 }
 
 function Room() {
   
+  this.roomType = Room.types.SMALL;
   this.uuid = NodeUUID.v1();
-  this.maxUsers = Room.size.SMALL;
+  
   this.users = new List();
   this.isFull = false;
   this.state = "prepare"; //"prepare"/"active"/"completed"/etc..
@@ -25,10 +27,11 @@ function Room() {
 
   this.join = function(user) {
     if (this.isFull) return null;
-    if (this.find(user)) return this.reJoin(user);
+    if (this.find(user)) return this;
+    //if (this.findUserByUUID()) return this.reJoin(user);
     this.users.push(user);
-    console.log("join: " + this.uuid + " " + user.uuid + " " + this.users.count() + "/" + this.maxUsers);
-    this.isFull = this.users.count() == this.maxUsers;
+    console.log("join: " + this.uuid + " " + user.uuid + " " + this.users.count() + "/" + this.roomType.players);
+    this.isFull = this.users.count() == this.roomType.players;
     if (this.isFull) { //looping users list
       this.users.tail().setNext(this.users.head());
       this.users.head().setPrevious(this.users.tail());
@@ -89,13 +92,11 @@ Room.create = function() {
 
 Room.kill = function(room) {
   Room.map.count--;
-  if (room.state == "prepare") {
-    //clean all links!
-    //Room.prepared.count--;
-    //delete Room.prepared[uuid];
+  delete Room.map[room.uuid];
+  if (Room.prepared[room.uuid]) {
+    delete Room.prepared[room.uuid];
+    Room.prepared.count--;
   }
-  //clean all links!
-  //delete Room.map[uuid];
 }
 
 module.exports = Room;
