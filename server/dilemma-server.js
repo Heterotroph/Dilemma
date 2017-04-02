@@ -2,9 +2,9 @@ const WSWorker = require("./ws-worker");
 const User = require("./user");
 const Response = require("./response");
 const Room = require("./room");
+const log = require("./utils/logger.js")
 
 module.exports = function() {
-
 	var wsWorker = new WSWorker();
 	wsWorker.createServer();
 	
@@ -38,7 +38,8 @@ module.exports = function() {
 				!(room = Room.getRoom().join(user))
 			);
 			roomByUserUUID[user.uuid] = room;
-			ws.send(JSON.stringify(Response.room(room.uuid)));
+			log("room by user id");
+			ws.send(JSON.stringify(Response.room(0, room.uuid, room.users.count())));
 			if (!room.isFull) return;
 			setTimeout(function() {
 				room.start();

@@ -20,10 +20,25 @@ Response.start = function(uuid) {
 	}
 }
 
-Response.room = function(uuid) {
+Response.room = function(status, uuid, players) {
 	return {
 		"action": "room",
-		"data": uuid,
+		"data": {
+			"status": status,
+			"uuid": uuid,
+			"players": players
+		},
+		"timestamp": new Date().getTime()
+	}
+}
+
+Response.step = function(currentStep, stepData) {
+	return {
+		"action": "room",
+		"data": {
+			"currentStep": currentStep,
+			"stepData": stepData
+		},
 		"timestamp": new Date().getTime()
 	}
 }

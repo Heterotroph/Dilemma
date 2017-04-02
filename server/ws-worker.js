@@ -3,9 +3,10 @@ const WebSocketServer = new require("ws");
 const Cookie = require("cookie");
 const Response = require("./response");
 const NodeUUID = require("node-uuid");
+const log = require("./utils/logger.js")
 
 /**
- *	JSON example
+ *	JSON request example
  *	{
  *		"action": "super-puper-action",
  *		"data": "<action-data>",
@@ -24,7 +25,7 @@ class WSWorker extends EventEmitter {
 			ip: process.env.WS_IP,
 			port: process.env.WS_PORT
 		});
-		console.log(process.env.WS_PORT);
+		log(process.env.WS_PORT);
 		this.onConnection();
 	}
 
@@ -34,11 +35,8 @@ class WSWorker extends EventEmitter {
 	onConnection() {
 		var that = this;
 		this.server.on("connection", function(ws) {
-
-			console.log("connection");
-
 			var uuid = processUUIDCookie(ws.upgradeReq.headers.cookie);
-			console.log(uuid);
+			log("connection: " + uuid, true);
 
 			var interval = setInterval(function() {
 				ws.ping()
@@ -57,7 +55,7 @@ class WSWorker extends EventEmitter {
 					uuid = NodeUUID.v1();
 					var response = JSON.stringify(Response.uuid(uuid));
 					ws.send(response);
-					console.log("send: " + response);
+					log("send: " + response);
 				}
 				return uuid;
 			}
@@ -75,17 +73,17 @@ class WSWorker extends EventEmitter {
 			}
 
 			ws.on("message", function(message) {
-				console.log("message: " + message);
+				log("message: " + message + "; uuid: " + uuid, true);
 				processMessage(message);
 			});
 
 			ws.on("close", function(code, reason) {
-				console.log("close: " + code + "; " + reason);
+				log("close: " + code + "; uuid: " + uuid + "; reason: " + reason, true);
 				clearInterval(interval);
 			});
 
 			ws.on("error", function(error) {
-				console.log("error: " + error);
+				log("error: " + error + "; uuid: " + uuid, true);
 				clearInterval(interval);
 				ws.close(1011);
 			});

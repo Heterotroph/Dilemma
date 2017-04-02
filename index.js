@@ -1,5 +1,7 @@
 'use strict'
 
+console.log(new Date().getTime());
+
 var staticServer = require(process.env.STATIC_PATH + "dilemma-static");
 staticServer();
 
