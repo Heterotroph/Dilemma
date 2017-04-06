@@ -20,13 +20,16 @@ Response.start = function(uuid) {
 	}
 }
 
-Response.room = function(status, uuid, players) {
+Response.room = function(status, uuid, currentPlayersCount, maxPlayersCount) {
 	return {
 		"action": "room",
 		"data": {
 			"status": status,
-			"uuid": uuid,
-			"players": players
+			"room-uuid": uuid,
+			"players": {
+				"currentCount": currentPlayersCount,
+				"maxCount": maxPlayersCount
+			}
 		},
 		"timestamp": new Date().getTime()
 	}

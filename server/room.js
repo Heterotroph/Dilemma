@@ -55,15 +55,18 @@ function Room() {
   }
 
   this.start = function() {
+    log("room " + this.uuid + " starts...");
+    
     Room.removeFromPrepared(this);
     
     this.send(this.users, JSON.stringify(Response.start(this.uuid)));
     this.state = "active";
     
-    this.stepInterval = setInterval(step, this.type.interval);
+    this.stepInterval = setInterval(this.step, this.type.interval);
   }
   
   this.step = function() {
+    log("step: " + this.uuid);
     //Response.step()....
   }
   

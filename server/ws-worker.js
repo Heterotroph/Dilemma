@@ -25,7 +25,6 @@ class WSWorker extends EventEmitter {
 			ip: process.env.WS_IP,
 			port: process.env.WS_PORT
 		});
-		log(process.env.WS_PORT);
 		this.onConnection();
 	}
 

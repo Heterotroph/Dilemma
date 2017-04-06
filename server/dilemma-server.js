@@ -38,8 +38,7 @@ module.exports = function() {
 				!(room = Room.getRoom().join(user))
 			);
 			roomByUserUUID[user.uuid] = room;
-			log("room by user id");
-			ws.send(JSON.stringify(Response.room(0, room.uuid, room.users.count())));
+			ws.send(JSON.stringify(Response.room(0, room.uuid, room.users.count(), room.type.players)));
 			if (!room.isFull) return;
 			setTimeout(function() {
 				room.start();
