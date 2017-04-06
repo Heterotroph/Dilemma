@@ -13,9 +13,10 @@ Room.types = {
   "SMALL": {
     "players": 3,
     "resuorces": 300,
-    "interval": 20
+    "interval": 20000
   }
 }
+
 
 function Room() {
   
@@ -29,8 +30,13 @@ function Room() {
   
   this.stepInterval;
   this.currentStep = 0;
+  this.steps = [];
+  
+  this.timestamp = new Date().getTime();
 
-
+  /**
+   *  Добавляет пользователя в комнату
+   */
   this.join = function(user) {
     log("join attemp...")
     if (this.isFull) return null;
@@ -49,31 +55,66 @@ function Room() {
     
     return this;
   };
-
+  
+  /**
+   *  Перевход. (Если есть новый ws, но у юзера старый uuid)
+   */
   this.reJoin = function(user) {
     //search by uuid and replace in users list
   }
-
+  
+  /**
+   *  Вызов говорит о получении от пользователя данных о взаимодействии с другими игроками для текущего шага.
+   */
+  this.interact = function(data, user) {
+    if (this.currentStep != data.step) return;
+  }
+  
+  /**
+   *  Запускает комнату
+   */
   this.start = function() {
     log("room " + this.uuid + " starts...");
+    
+    if (!this.isFull) {
+      log("room is not full; completeness: " + this.users.count() + "/" + this.type.players);
+      return;
+    }
     
     Room.removeFromPrepared(this);
     
     this.send(this.users, JSON.stringify(Response.start(this.uuid)));
     this.state = "active";
     
-    this.stepInterval = setInterval(this.step, this.type.interval);
+    (function(that) {
+      this.stepInterval = setInterval(function() {
+        that.step();
+      }, that.type.interval);
+    })(this);
   }
   
+  /**
+   *  Запускает расчёт игрового хода и рассылает результат юзерам. Запускается setInterval'ом из местного кода.
+   */
   this.step = function() {
-    log("step: " + this.uuid);
-    //Response.step()....
+    log("step " + this.currentStep + "; room: " + this.uuid, true);
+    
+    // * * * GAME LOGIC * * *
+    
+    this.send(this.users, JSON.stringify(Response.step(this.currentStep, "STEP DATA")));
+    this.currentStep ++;
   }
   
+  /**
+   *  Останавливает, но не убивает комнату
+   */
   this.stop = function() {
     clearInterval(this.stepInterval);
   }
-
+  
+  /**
+   *  Посылает списку юзеров в recipients значение содержащееся в response
+   */
   this.send = function(recipients, response) {
     var node = recipients.head();
     do {
@@ -82,6 +123,9 @@ function Room() {
     } while (node != recipients.head())
   }
   
+  /**
+   *  Поиск изюера в связанном списке. Нативный find на зацикленный спсиок не работает, индус обещал починить.
+   */
   this.find = function(value) {
     var node = this.users.head();
     if (!node) return null;
@@ -90,6 +134,14 @@ function Room() {
       node = node.next();
     } while (node != this.users.head() && node);
     return null;
+  }
+  
+  /**
+   *
+   */
+  this.pushStepData = function(user, data) {
+    if (!this.steps[this.currentStep]) this.steps[this.currentStep] = {};
+    this.steps[this.currentStep][user.uuid] = data;
   }
 
 }

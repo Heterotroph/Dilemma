@@ -37,7 +37,7 @@ Response.room = function(status, uuid, currentPlayersCount, maxPlayersCount) {
 
 Response.step = function(currentStep, stepData) {
 	return {
-		"action": "room",
+		"action": "step",
 		"data": {
 			"currentStep": currentStep,
 			"stepData": stepData

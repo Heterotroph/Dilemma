@@ -20,7 +20,7 @@ class WSWorker extends EventEmitter {
 	 *
 	 */
 	createServer() {
-		this.allowablEvents = ["join", "step"]; //actions from client
+		this.allowablEvents = ["join", "interact"]; //actions from client
 		this.server = new WebSocketServer.Server({
 			ip: process.env.WS_IP,
 			port: process.env.WS_PORT
